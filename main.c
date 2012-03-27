@@ -57,6 +57,7 @@ size_t getTextLength(char *text) {
     return i;
 }
 qml_document *parseQML(QML_TEXT text,int unicode) {
+    int insideString = 0;
     int row = 0;
     int col = 0;
     int mode = QML_PARSER_MODE_ENTITY;
@@ -70,6 +71,7 @@ qml_document *parseQML(QML_TEXT text,int unicode) {
         
         QML_CHAR token = text[i];
         switch(token) {
+          
             case '\n':
                 row++;
                 col = 0;
@@ -96,41 +98,45 @@ qml_document *parseQML(QML_TEXT text,int unicode) {
                 child->type = token;
                 
                 break;
-            case ';':
-                if(currentNode->parent == NULL && level < 0) {
-                   
-                    printf("Invalid token at row %d, column %d", row, col);
-                    return NULL;
-                }
-                mode = QML_PARSER_MODE_ENTITY;
-                currentNode = currentNode->parent;
-                level++;
-                
-                // Reset text buffer
-                char *content = currentNode->content;
-                textPos = 0;
-                break;
+       
             default:
-                switch(mode) {
-                    case QML_PARSER_MODE_ENTITY:
-                        if(token == ' ' || token == '\t') {
-                            mode = QML_PARSER_MODE_CONTENT;
-                            textPos = 0;
+                if(level == 0) {
+                    break;
+                }
+                if(text[i - 1] != '\\' && token == '\"') {
+                    insideString = !insideString;
+                    break;
+                }
+                if(token == '.' && !insideString) {
+                   
+                    mode = QML_PARSER_MODE_ENTITY;
+                    currentNode = currentNode->parent;
+                    level++;
+                    
+                    // Reset text buffer
+                    textPos = 0;
+                    break;
+                } else {
+                    switch(mode) {
+                        case QML_PARSER_MODE_ENTITY:
+                            if(token == ' ' || token == '\t' && !insideString) {
+                                mode = QML_PARSER_MODE_CONTENT;
+                                textPos = 0;
+                                break;
+                            }
+                            else {      
+                                    currentNode->tag[textPos] = token;
+                                    
+                            }
+                            textPos++;
                             break;
-                        }
-                        else {      
-                            char *text = currentNode->tag;    
-                            currentNode->tag[textPos] = token;
-                                
-                        }
-                        textPos++;
-                        break;
-                    case QML_PARSER_MODE_CONTENT:
-                        currentNode->content[textPos] = token;
-                        char *content = currentNode->content;
-                        textPos++;
-                        break;
-                
+                        case QML_PARSER_MODE_CONTENT:
+                            currentNode->content[textPos] = token;
+                            char *content = currentNode->content;
+                            textPos++;
+                            break;
+                    
+                    }
                 }
             break;
                 
