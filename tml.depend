@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1332860514 source:c:\users\alexander\documents\tml\tml\main.c
+	"tml.h"
+	<stdlib.h>
+
+1332793510 c:\users\alexander\documents\tml\tml\main.h
+
+1332856801 c:\users\alexander\documents\tml\tml\tml.h
+

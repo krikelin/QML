@@ -1,0 +1,6 @@
+EXPORTS
+    createQMLElement @1
+    createQMLText @2
+    parseQML @3
+    qml_push_child @4
+    x @5 DATA
