@@ -1,11 +1,15 @@
 # QML
-QML is a simple tree based Markup Language. It's special ambition is to be a **lightweight**, cool and nice markup language. The key features is:
+QML is a simple semantic markup Language, that supports marking up text flow with properties.
+ It's special ambition is to be a **lightweight**, cool and nice markup language. The key features is:
 
  * Simple to make parsers, very few special tokens.
  * Twitter-compatibility. The feature is to easy render trees of twitter mentions
  
+# Example:
+
+				The #book w with the #title "QML Language specs", written in the small ¤city Lidköping by the @author Alexander #describes about the new cool #language QML,
  
- # Element
+# Element
  A element tag is beginning with a #<element Name>, containing the text and is ended with a '.'. The choice of sign is to make it fast to type on all kind of keyboards,
  even smaller on laptops. Elements can contain nested elements. Here is a book element
  
@@ -13,7 +17,7 @@ QML is a simple tree based Markup Language. It's special ambition is to be a **l
 					#Title QML Documentation
 				.
  
- ## Arrays
+## Arrays
 A set of items should not use the same #tag at the same time, instead it should be clocked together into a array separated by a','. The reason to do this
 is that it will be easier to implement the parses and faster processing.
 

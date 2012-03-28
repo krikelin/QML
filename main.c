@@ -47,7 +47,9 @@ qml_node *createQMLElement() {
 Push a child to the qml_node
 **/
 void qml_push_child(qml_node *container, qml_node *child) {
+int iCountChildren = container->iCountChildren;
     container->iCountChildren++;
+    iCountChildren = container->iCountChildren;
     container->children[container->iCountChildren] = child;
 }
 size_t getTextLength(char *text) {
@@ -77,7 +79,7 @@ qml_document *parseQML(QML_TEXT text,int unicode) {
                 col = 0;
                 break;
             case '#':
-            case '@':
+
             case '$':
             case '^':
                 textPos = 0;
@@ -87,8 +89,8 @@ qml_document *parseQML(QML_TEXT text,int unicode) {
                 
                 // add current_node to children
                 if(currentNode != NULL) {
-                    currentNode->children[currentNode->iCountChildren] = child; // Add children to collection
-                    currentNode->iCountChildren++; // Increase it
+                    //currentNode->children[currentNode->iCountChildren] = child; // Add children to collection
+                    //currentNode->iCountChildren++; // Increase it
                     child->parent = currentNode;
                     qml_push_child(currentNode, child);
                 } else {
@@ -103,11 +105,11 @@ qml_document *parseQML(QML_TEXT text,int unicode) {
                 if(level == 0) {
                     break;
                 }
-                if(text[i - 1] != '\\' && token == '\"') {
+                if(text[i - 1] != '\\' && (token == '"' || token =='\'')) {
                     insideString = !insideString;
                     break;
                 }
-                if(token == '.' && !insideString) {
+                if((token == '.' || token == ',') && !insideString) {
                    
                     mode = QML_PARSER_MODE_ENTITY;
                     currentNode = currentNode->parent;
